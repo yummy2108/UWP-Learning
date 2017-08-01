@@ -1,0 +1,265 @@
+﻿<UserControl
+    x:Class="MemoryBox.Templates.DiaryTemplate"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MemoryBox.Templates"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:c="using:MemoryBox.Converters"
+    xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
+    mc:Ignorable="d"
+    >
+
+    <UserControl.Resources>
+        <c:DateFormatConverter x:Key="DateFormatConverter" />
+        <c:UriToImageConverter x:Key="UriToImageConverter" />
+        <c:IndexToIconConverter x:Key="IndexToIconConverter" />
+        <c:IndexFormatConverter x:Key="IndexFormatConverter" />
+        <c:LocFormatConverter x:Key="LocFormatConverter" />
+        <Storyboard x:Name="StackPanelEnterStoryboard">
+            <DoubleAnimation Storyboard.TargetName="diary"
+                             Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)"
+                             To="0"
+                             Duration="0:0:0.2"/>
+        </Storyboard>
+        <Storyboard x:Name="StackPanelExitStoryboard">
+            <DoubleAnimation Storyboard.TargetName="diary"
+                             Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)"
+                             To="10"
+                             Duration="0:0:0.2"/>
+        </Storyboard>
+
+        <Style x:Key="ButtonStyle1" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="-3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <RelativePanel Name="diary"
+                   Margin="0, 16, 0, 30" 
+                   
+                   Width="500" 
+                   Background="White" 
+                   PointerEntered="diary_PointerEntered"
+                   PointerExited="diary_PointerExited"
+                   HorizontalAlignment="Center">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="VisualStateMin600">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="diary"
+                                         Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)"
+                                         To="10"
+                                         Duration="0:0:0.2"/>
+                    </Storyboard>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+
+                <VisualState x:Name="VisualStateMin500">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="diary"
+                                         Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)"
+                                         To="0"
+                                         Duration="0:0:0.2"/>
+                    </Storyboard>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="501" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+
+                <VisualState x:Name="VisualStateMin0">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetName="diary"
+                                         Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)"
+                                         To="0"
+                                         Duration="0:0:0.2"/>
+                    </Storyboard>
+                    <VisualState.Setters>
+                        <Setter Target="diary.(UIElement.Margin)"
+                                Value="0"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+
+                
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <RelativePanel.Projection>
+            <PlaneProjection RotationX="0" RotationY="10" RotationZ="0"  />
+        </RelativePanel.Projection>
+
+        <FlipView Name="imagesViewer"
+                  ItemsSource="{x:Bind Diary.Images}"
+                  RelativePanel.AlignTopWithPanel="True"
+                  Height="240">
+            <FlipView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Image Stretch="UniformToFill" 
+                               Source="{Binding}"/>
+                    </Grid>
+                </DataTemplate>
+            </FlipView.ItemTemplate>
+        </FlipView>
+
+        <RelativePanel RelativePanel.Below="imagesViewer"
+                       RelativePanel.AlignBottomWithPanel="True"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.AlignRightWithPanel="True"
+                       Padding="15">
+            <TextBlock x:Name="date"
+                       Margin="0, 15, 10, 10"
+                       Text="{x:Bind Diary.Date, Converter={StaticResource DateFormatConverter}}"
+                       FontSize="24"
+                       RelativePanel.AlignLeftWithPanel="True"/>
+            <TextBlock x:Name="weather"
+                       Margin="10, 15, 10, 10"
+                       Text="{x:Bind Diary.CurWeather.Weather}"
+                       FontSize="24"
+                       ToolTipService.ToolTip="{x:Bind Diary.CurWeather.Temperature}"
+                       RelativePanel.AlignRightWithPanel="True"
+                   />
+
+            <Line x:Name="seperator"
+                  Margin="0, 0, 0, 5" 
+                  Stroke="#FF0078D7"
+                  Stretch="Fill" 
+                  StrokeThickness="2" X1="1"
+                  RelativePanel.Below="date"
+                  Width="60"/>
+            <Maps:MapControl x:Name="map"            
+                             ZoomInteractionMode="GestureAndControl"
+                             TiltInteractionMode="GestureAndControl"   
+                             Height="150"
+                             Margin="0, 5"
+                             MapServiceToken="Z0jjz27enQKV6U2JZoGP~h5w-dWxZYxbrMojja38c9w~AhjVXPbM1IELU4023_D0RL2qWnaSb96CXrz7n2ztBqRAVon0hWmvs0tQSqSfnxbE"
+                             RelativePanel.Below="seperator"
+                             RelativePanel.AlignRightWithPanel="True"
+                             RelativePanel.AlignLeftWithPanel="True"
+                             LandmarksVisible="True"
+                             ZoomLevel="14"
+                             Center="{x:Bind Diary.CurLoc,Converter={StaticResource LocFormatConverter}}"
+                             Visibility="Collapsed"/>
+            <RadioButton x:Name="locationButton" 
+                         RelativePanel.Below="map"
+                         IsChecked="True">
+                <TextBlock Text="{x:Bind Diary.CurWeather.Location}" FontSize="14"/>
+            </RadioButton>
+
+            <ToggleButton Name="dropDownButton"
+                          Width="32"
+                          Height="32"
+                          RelativePanel.AlignRightWith="map"
+                          RelativePanel.AlignVerticalCenterWith="locationButton"
+                          Click="dropDownButton_Click"
+                          Background="White"
+                          FontFamily="Segoe MDL2 Assets"
+                          FontSize="12"
+                          Content="&#xE019;"/>
+            <ScrollViewer RelativePanel.Below="locationButton"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          Margin="0, 30">
+                <TextBlock TextWrapping="Wrap" 
+                           FontSize="16"
+                           CharacterSpacing="60"
+                           Text="{x:Bind Diary.Description}"/>
+            </ScrollViewer>
+
+        </RelativePanel>
+
+        <Button Name="moodButton"
+                Width="32"
+                Height="32"
+                Padding="-4"
+                Margin="5"
+                Background="White"
+                RelativePanel.AlignBottomWith="imagesViewer"
+                RelativePanel.AlignRightWithPanel="True"
+                Style="{StaticResource ButtonStyle1}">
+            <Button.Content>
+                <Image Name="moodIcon"
+                       Source="{x:Bind Diary.MoodIndex, Converter={StaticResource IndexToIconConverter}}"/>
+            </Button.Content>
+            <Button.Flyout>
+                <Flyout x:Name="moodFlyout">
+                    <StackPanel Padding="-10">
+                        <TextBlock Name="moodIndex"
+                                   Text="{x:Bind Diary.MoodIndex, Converter={StaticResource IndexFormatConverter}}"
+                                   FontSize="20"
+                                   FontWeight="Light"/>
+                    </StackPanel>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+
+    </RelativePanel>
+</UserControl>

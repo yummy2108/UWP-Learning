@@ -1,0 +1,121 @@
+﻿<Page
+    x:Class="MemoryBox.Views.DisplayPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MemoryBox.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="using:MemoryBox.Models"
+    xmlns:t="using:MemoryBox.Templates"
+    xmlns:c="using:MemoryBox.Converters"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <c:UriToImageConverter x:Key="UriToImageConverter" />
+
+        <Storyboard x:Name="ViewerEnterStoryboard">
+            <FadeInThemeAnimation Storyboard.TargetName="diaryViewer" />
+            <FadeInThemeAnimation Storyboard.TargetName="viewerMask" />
+        </Storyboard>
+        <Storyboard x:Name="ViewerExitStoryboard">
+            <FadeOutThemeAnimation Storyboard.TargetName="diaryViewer" />
+            <FadeOutThemeAnimation Storyboard.TargetName="viewerMask" />
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="VisualStateMinWidth500">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="501" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+
+                <VisualState x:Name="VisualStateMinWidth0">
+                    <VisualState.Setters>
+                        <Setter Target="commandBar.(UIElement.Background)"
+                                Value="#F2F2F2"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <RelativePanel>
+            <FlipView Name="displayView" 
+                  Background="#FFF2F2F2"
+                  ItemsSource="{x:Bind ViewModel.AllItems}"
+                      RelativePanel.Below="commandBar">
+                <FlipView.ItemTemplate>
+                    <DataTemplate x:DataType="md:DiaryItem">
+                        <t:DiaryTemplate />
+                    </DataTemplate>
+                </FlipView.ItemTemplate>
+            </FlipView>
+
+            <CommandBar Name="commandBar"
+                        Background="Transparent"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignLeftWithPanel="True">
+                <AppBarButton Name="deleteButton"
+                          Icon="Delete"
+                          Label="Delete">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Delete current diary" Tag="deleteCur" Click="MenuFlyoutItem_Click"/>
+                            <MenuFlyoutItem Text="Clear all diarys" Tag="clear" Click="MenuFlyoutItem_Click"/>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Name="addButton"
+                          Icon="Add"
+                          Label="Add"/>
+            </CommandBar>
+
+
+            <ScrollViewer x:Name="diaryViewer"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignBottomWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          PointerEntered="diaryViewer_PointerEntered"
+                          PointerExited="diaryViewer_PointerExited"
+                          HorizontalScrollMode="Enabled"
+                          IsHorizontalRailEnabled="True"
+                          VerticalScrollMode="Disabled"
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Visible"
+                          Canvas.ZIndex="1"
+                          >
+                <ListView x:Name="diaryList"
+                          IsItemClickEnabled="True"
+                          SelectedIndex="{Binding SelectedIndex, ElementName=displayView, Mode=TwoWay}"
+                          ItemsSource="{x:Bind ViewModel.AllItems}"
+                          Margin="0, 0, 0, 10"
+                          >
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="md:DiaryItem">
+                            <t:ThumbnailTemplate />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+            <Rectangle x:Name="viewerMask" 
+                       RelativePanel.AlignTopWith="diaryViewer"
+                       RelativePanel.AlignLeftWith="diaryViewer"
+                       RelativePanel.AlignRightWith="diaryViewer"
+                       RelativePanel.AlignBottomWith="diaryViewer"                   
+                       Fill="Gray"
+                       Opacity="0.2"              
+                       />
+        </RelativePanel>
+    </Grid>
+</Page>

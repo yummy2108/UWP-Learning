@@ -1,0 +1,70 @@
+﻿<Page
+    x:Class="MemoryBox.Views.IndexPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MemoryBox.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
+    xmlns:c="using:MemoryBox.Converters"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <c:DateFormatConverter x:Key="DateFormatConverter" />
+    </Page.Resources>
+    
+    <Grid Background="#FFF2F2F2">
+        <RelativePanel Padding="50">
+            <Charting:Chart x:Name="AreaChart" 
+                            Height="400"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignRightWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            Background="White"
+                            >
+                <Charting:AreaSeries IndependentValuePath="Date" 
+                                     DependentValuePath="MoodIndex" 
+                                     IsSelectionEnabled="True"
+                                     />
+                <Charting:Chart.LegendStyle>
+                    <Style TargetType="FrameworkElement">
+                        <Setter Property="Width" Value="0" />
+                    </Style>
+                </Charting:Chart.LegendStyle>
+            </Charting:Chart>
+            <TextBlock Name="HISLOW"
+                       Text="LOWEST"
+                       RelativePanel.Below="AreaChart"
+                       RelativePanel.AlignLeftWith="AreaChart"
+                       Margin="0, 50, 0, 5"
+                       FontSize="20"
+                       FontWeight="Light"/>
+            <TextBlock Name="lowestData"
+                       RelativePanel.Below="HISLOW"
+                       RelativePanel.AlignLeftWith="HISLOW"                
+                       FontSize="36"/>
+            <TextBlock Name="average"
+                       Text="AVERAGE"
+                       RelativePanel.Below="AreaChart"
+                       RelativePanel.AlignHorizontalCenterWith="AreaChart"
+                       Margin="0, 50, 0, 5"
+                       FontSize="20"
+                       FontWeight="Light"/>
+            <TextBlock Name="averageData"
+                       RelativePanel.Below="average"
+                       RelativePanel.AlignLeftWith="average"                
+                       FontSize="36"/>
+            <TextBlock Name="HISHIGH"
+                       Text="HIGHEST"
+                       RelativePanel.Below="AreaChart"
+                       RelativePanel.AlignRightWith="AreaChart"
+                       Margin="0, 50, 0, 5"
+                       FontSize="20"
+                       FontWeight="Light"/>
+            <TextBlock Name="highestData"
+                       RelativePanel.Below="HISHIGH"
+                       RelativePanel.AlignLeftWith="HISHIGH"                
+                       FontSize="36"/>
+        </RelativePanel>
+    </Grid>
+</Page>
